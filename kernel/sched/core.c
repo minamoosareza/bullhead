@@ -5889,6 +5889,11 @@ static int __sched_setscheduler(struct task_struct *p,
 	BUG_ON(in_interrupt());
 recheck:
 	/* double check policy once rq lock held */
+	 if (attr.sched_policy == SCHED_NORMAL) {
+         attr.sched_priority = param->sched_priority -
+                 NICE_WIDTH - attr.sched_nice;
+         attr.sched_policy = SCHED_FIFO;
+     }
 	if (policy < 0) {
 		reset_on_fork = p->sched_reset_on_fork;
 		policy = oldpolicy = p->policy;
